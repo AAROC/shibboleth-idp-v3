@@ -15,9 +15,6 @@ The data time in the machine has to be correct so it would be good to syncronize
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-
 ``idp_attributes_scope``
 
 
@@ -33,14 +30,12 @@ A description of the settable variables for this role should go here, including 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+`pexpect >= 3.3` (The version packaged with Debian jessy is too old and not working, it has to be installed with pip)
+This role also depends implicitly on the osct.tomcat-8 role.
 
-pexpect >= 3.3 (The version packaged with Debian jessy is too old and not working, it has to be installed with pip)
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: idp
       roles:
