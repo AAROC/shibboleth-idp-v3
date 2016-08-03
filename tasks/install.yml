@@ -1,9 +1,29 @@
 ---
-- name: Check OS
-  assert: { that: "ansible_os_family == 'Debian'" }
+# - name: Check OS
+#   assert: { that: "ansible_os_family == 'Debian'" }
+#   tags:
+#     - shibboleth
+#     - idp_install
+- name: ensure that python setuptools are installed
+  yum:
+    name: python-setuptools
+    state: present
   tags:
     - shibboleth
-    - idp_ install
+
+- name: ensure that pip is installed
+  easy_install:
+    name: pip
+    state: latest
+  tags:
+    - shibboleth
+
+- name: Ensure pexpect is installed
+  pip:
+    name: pexpect
+    state: present
+  tags:
+    - shibboleth
 
 - name: Create directory for shibboleth package
   file:
@@ -40,6 +60,8 @@
         - "{{ idp_backchannel_PKCS12_password }}"
         - "{{ idp_cookie_encryption_key_password }}"
       "Cookie Encryption Key Password: ": "{{ idp_cookie_encryption_key_password }}"
+  environment:
+    - JAVA_HOME: /usr/lib/jvm/jre-openjdk
   tags:
     - shibboleth
     - idp_install
@@ -55,10 +77,19 @@
     - shibboleth
     - idp_install
 
+- name: ensure that the context directory is present
+  file:
+    path: "/etc/{{ tomcat_service_name }}/Catalina/localhost"
+    state: directory
+    recurse: true
+    owner: "{{ tomcat_user }}"
+  tags:
+    - shibboleth
+
 - name: Add the idp context in tomcat
   template:
     src: tomcat/idp.xml.j2
-    dest: /etc/{{ tomcat_service_name }}/Catalina/localhost/idp.xml
+    dest: "/etc/{{ tomcat_service_name }}/Catalina/localhost/idp.xml"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
     mode: 0644
